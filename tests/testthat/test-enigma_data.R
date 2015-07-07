@@ -2,6 +2,8 @@
 context("enigma_data")
 
 test_that("enigma_data column selection works correctly", {
+  skip_on_cran()
+  
   cols <- c('namelast','visitee_namelast','last_updatedby')
   res1 <- enigma_data(dataset='us.gov.whitehouse.visitor-list', select=cols)
   expect_is(res1, "enigma")
@@ -13,6 +15,8 @@ test_that("enigma_data column selection works correctly", {
 })
 
 test_that("enigma_data works correctly for sorting data", {
+  skip_on_cran()
+  
   res2 <- enigma_data(dataset='us.gov.whitehouse.visitor-list', sort='+namelast')
   res2_2 <- enigma_data(dataset='us.gov.whitehouse.visitor-list', sort='-namelast')
   expect_is(res2, "enigma")
@@ -20,15 +24,17 @@ test_that("enigma_data works correctly for sorting data", {
   expect_is(res2$datapath, "character")
   expect_is(res2$info, "list")
   expect_is(res2$result, "data.frame")
-  expect_equal(unique(sapply(res2_2$result$namelast, function(x) substring(x, 1, 1), USE.NAMES = FALSE)), "Z")
+  expect_equal(unique(tolower(sapply(res2_2$result$namelast, function(x) substring(x, 1, 1), USE.NAMES = FALSE))), "z")
 })
 
 test_that("enigma_data works correctly to get data subset", {
-  res3 <- enigma_data(dataset='com.nike.manufacturing-disclosures', where='total_workers > 1000')
+  skip_on_cran()
+  
+  res3 <- enigma_data(dataset = 'us.gov.whitehouse.visitor-list', where = 'total_people > 5')
   expect_is(res3, "enigma")
   expect_true(res3$success)
   expect_is(res3$datapath, "character")
   expect_is(res3$info, "list")
   expect_is(res3$result, "data.frame")
-  expect_more_than(sample(as.numeric(res3$result$total_workers), 1), 1000)
+  expect_more_than(min(as.numeric(res3$result$total_people)), 5)
 })

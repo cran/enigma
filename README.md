@@ -4,6 +4,10 @@ enigma
 
 
 [![Build Status](https://api.travis-ci.org/rOpenGov/enigma.png)](https://travis-ci.org/rOpenGov/enigma)
+<!-- [![Coverage Status](https://coveralls.io/repos/rOpenGov/enigma/badge.svg)](https://coveralls.io/r/rOpenGov/enigma) -->
+[![codecov.io](https://codecov.io/github/rOpenGov/enigma/coverage.svg?branch=master)](https://codecov.io/github/rOpenGov/enigma?branch=master)
+[![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/enigma)](https://github.com/metacran/cranlogs.app)
+[![cran version](http://www.r-pkg.org/badges/version/enigma)](http://cran.rstudio.com/web/packages/enigma)
 
 **An R client for [Enigma.io](https://app.enigma.io/)**
 
@@ -18,9 +22,16 @@ Enigma holds government data and provides a really nice set of APIs for data, me
 
 MIT, see [LICENSE file](https://github.com/rOpenGov/enigma/blob/master/LICENSE) and [MIT text](http://opensource.org/licenses/MIT)
 
-## Quick start
+## Install
 
-### Install
+Stable version from CRAN
+
+
+```r
+install.packages("enigma")
+```
+
+Or development version from GitHub
 
 
 ```r
@@ -46,22 +57,22 @@ Some metadata on the results
 ```r
 out$info
 #> $rows_limit
-#> [1] 50
+#> [1] 500
 #> 
 #> $total_results
-#> [1] 3965995
+#> [1] 4462510
 #> 
 #> $total_pages
-#> [1] 79320
+#> [1] 8926
 #> 
 #> $current_page
 #> [1] 1
 #> 
 #> $calls_remaining
-#> [1] 49958
+#> [1] 49914
 #> 
 #> $seconds_remaining
-#> [1] 1378384
+#> [1] 2084748
 ```
 
 Look at the data, first 6 rows for readme brevity
@@ -92,16 +103,16 @@ Some summary stats
 ```r
 out$result[c('sum','avg','stddev','variance','min','max')]
 #> $sum
-#> [1] "1124496594"
+#> [1] "1245086302"
 #> 
 #> $avg
-#> [1] "284.9675774590850448"
+#> [1] "280.4864992845274096"
 #> 
 #> $stddev
-#> [1] "538.834750750563"
+#> [1] "533.430430655024"
 #> 
 #> $variance
-#> [1] "290342.888616420900"
+#> [1] "284548.024348804258"
 #> 
 #> $min
 #> [1] "0"
@@ -117,12 +128,12 @@ Frequency details
 ```r
 head(out$result$frequency)
 #>   total_people  count
-#> 1            1 179164
-#> 2            6 110585
-#> 3            2 110305
-#> 4            4  89524
-#> 5            3  89288
-#> 6            5  76722
+#> 1            1 205885
+#> 2            6 126360
+#> 3            2 124847
+#> 4            4 101829
+#> 5            3 100926
+#> 6          275  89107
 ```
 
 
@@ -146,7 +157,7 @@ out$info$paths
 #> [1] "United States"
 #> 
 #> [[1]]$description
-#> [1] "United States of Americaa"
+#> [1] "United States of America"
 #> 
 #> [[1]]$description_lead
 #> [1] "United States of America"
@@ -193,7 +204,7 @@ out$info$immediate_nodes
 #> [1] "White House Salaries"
 #> 
 #> [[1]]$description
-#> [1] "The White House report to Congress listing the title and salary of every White House Office employee since 1995."
+#> [1] "The White House has been required to deliver a report to Congress listing the title and salary of every White House Office employee since 1995.  Consistent with President Obama's commitment to transparency, this report is being publicly disclosed on our website as it is transmitted to Congress.  In addition, this report also contains the title and salary details of administration officials who work at the Office of Policy Development, including the Domestic Policy Council and the National Economic Council -- along with White House Office employees."
 ```
 
 
@@ -203,19 +214,19 @@ Children tables
 ```r
 out$info$children_tables[[1]]
 #> $datapath
-#> [1] "us.gov.whitehouse.nom-and-app"
+#> [1] "us.gov.whitehouse.visitor-list"
 #> 
 #> $label
-#> [1] "Nominations & Appointments"
+#> [1] "Visitor Records"
 #> 
 #> $description
-#> [1] "The nominees and appointees names, positions, agencies under which they are nominated or appointed, the agency's websites, nomination dates, and vote confirmation dates."
+#> [1] "Records of visitors to the White House from September 2009 to present."
 #> 
 #> $db_boundary_datapath
 #> [1] "us.gov.whitehouse"
 #> 
 #> $db_boundary_label
-#> [1] "The White House"
+#> [1] ""
 ```
 
 
@@ -228,12 +239,12 @@ First, get columns for the air carrier dataset
 dset <- 'us.gov.dot.rita.trans-stats.air-carrier-statistics.t100d-market-all-carrier'
 head(enigma_metadata(dset)$columns$table[,c(1:4)])
 #>               id          label         type index
-#> 1     passengers     Passengers type_varchar     0
-#> 2        freight Freight (Lbs.) type_varchar     1
-#> 3           mail    Mail (Lbs.) type_varchar     2
-#> 4       distance Distance (Mi.) type_varchar     3
+#> 1     passengers     Passengers type_numeric     0
+#> 2        freight Freight (Lbs.) type_numeric     1
+#> 3           mail    Mail (Lbs.) type_numeric     2
+#> 4       distance Distance (Mi.) type_numeric     3
 #> 5 unique_carrier Unique Carrier type_varchar     4
-#> 6     airline_id     Airline ID type_numeric     5
+#> 6     airline_id     Airline ID type_varchar     5
 ```
 
 
@@ -244,12 +255,12 @@ Looks like there's a column called _distance_ that we can search on. We by defau
 out <- enigma_stats(dset, select='distance')
 head(out$result$frequency)
 #>   distance count
-#> 1     0.00 16039
-#> 2    59.00 13235
-#> 3   296.00 13202
-#> 4    16.00 12855
-#> 5    95.00 12357
-#> 6    94.00 12167
+#> 1     0.00 16456
+#> 2   296.00 13595
+#> 3    59.00 13504
+#> 4    16.00 13101
+#> 5    95.00 12669
+#> 6    94.00 12354
 ```
 
 Then we can do a bit of tidying and make a plot
@@ -266,7 +277,7 @@ ggplot(df, aes(distance, count)) +
   labs(y="flights", x="distance (miles)")
 ```
 
-![plot of chunk unnamed-chunk-16](inst/assets/figure/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-17](inst/assets/figure/unnamed-chunk-17-1.png) 
 
 ### Direct dataset download
 

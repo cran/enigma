@@ -4,7 +4,7 @@
 #' stats on each of the datasets. That is, you can request a dataset itself, metadata on the 
 #' dataset, and summary statistics on the columns of each dataset.
 #'
-#' There functions:
+#' The functions:
 #'
 #' \itemize{
 #'  \item \code{\link[enigma]{enigma_data}} - Fetch and dataset, and filter on columns or rows.
@@ -21,6 +21,8 @@
 #' by creating an account with Enigma at \url{http://enigma.io}, then get an API key from 
 #' your Enigma account page.
 #'
+#' @importFrom methods is
+#' @importFrom utils read.delim head
 #' @name enigma
 #' @docType package
 NULL
